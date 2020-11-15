@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import telebot
 from PIL import Image
@@ -14,7 +13,8 @@ while True:
         conn = pymysql.connect(host='localhost',
                                database='onepunchman',
                                user='root',
-                               password='aH$2ucutROA1')
+                               password='aH$2ucutROA1',
+                               )
         cursor = conn.cursor()
 
         bot = telebot.TeleBot('1215578709:AAExaTAxqks3rgp3HuRfVDRBacCso6F1llI')
@@ -1929,14 +1929,22 @@ while True:
             file = Image.open('out_search.jpg')
 
             our = imagehash.phash(file)
-
             it_end = int(str(our), 16)
+
+            minn = f"""SELECT MIN(BIT_COUNT(phash ^ '{it_end}')) FROM picturehashes;"""
+            cursor.execute(minn)
+            resultpp = cursor.fetchall()
+            
+            req = f"""SELECT picturehashes.id FROM picturehashes WHERE BIT_COUNT(phash ^ '{it_end}')='{resultpp[0][0]}' LIMIT 1;"""
+            cursor.execute(req)
+            resultp=cursor.fetchall()
+
+
             sql = f"""SELECT picturehashes.picturename, series.seriesname, series.fileid, BIT_COUNT(phash ^ '{it_end}'), 
             picturehashes.times
             FROM picturehashes,series
             WHERE picturehashes.sid=series.id and
-            BIT_COUNT(phash ^ '{it_end}')=(SELECT MIN(BIT_COUNT(phash ^ '{it_end}'))
-            FROM picturehashes) LIMIT 1;"""
+            picturehashes.id='{resultp[0][0]}';"""
 
             cursor.execute(sql)
             result = cursor.fetchall()
