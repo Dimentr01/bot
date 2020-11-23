@@ -1,23 +1,23 @@
 import telebot
-import my_personal_commands
-import for_bot_handler
+import PersonalCommands
+import BotHandlers
 import keyboards
 import emoji
-import for_db
+import db
 
 bot = telebot.TeleBot('1215578709:AAExaTAxqks3rgp3HuRfVDRBacCso6F1llI')
 req = {}
 text = {}
 
 
-def threats_do(message):
+def SendThreats(message):
     bot.send_message(message.chat.id,
                      text[message.text.lower()],
                      reply_markup=keyboards.keyboard_threats)
-    for_bot_handler.users[message.from_user.id] = "threats"
+    BotHandlers.users[message.from_user.id] = "threats"
 
 
-def flash(message):
+def HeroFlash(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILHF'
                    '-EXDpQnUUB_wp4iPIhY_iPgueXAAIPsDEbDEkgSKjfbcSp7HVEd7OUly4AAwEAAwIAA20AA3yrAQABGwQ',
@@ -28,10 +28,10 @@ def flash(message):
                    'соответствующая. В свободное время, по его словам, в промышленных масштабах выносит вперед '
                    'ногами различные бандформирования.',
                    reply_markup=keyboards.keyboard_S_class11_17)
-    for_bot_handler.users[message.from_user.id] = "s-class11_17"
+    BotHandlers.users[message.from_user.id] = "s-class11_17"
 
 
-def master(message):
+def HeroMaster(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILHl-EXEVBei3OEM-QM7dTQIc09A'
                    '-lAAIRsDEbDEkgSM3qESuUsj_Rr2cWmC4AAwEAAwIAA20AA5yqAQABGwQ')
@@ -51,10 +51,10 @@ def master(message):
                      'проведать Ездока, о Гароу. По своим силам он фактически Сайтама-лайт: быстро бегает, '
                      'очень сильно бьет, крепок сам по себе, но более никаких чудес.',
                      reply_markup=keyboards.keyboard_S_class11_17)
-    for_bot_handler.users[message.from_user.id] = "s-class11_17"
+    BotHandlers.users[message.from_user.id] = "s-class11_17"
 
 
-def endfunc(message):
+def datanotfound(message):
     diction1 = dict()
     diction1["а"] = False
     diction1["х"] = False
@@ -79,16 +79,16 @@ def endfunc(message):
 
 
 def for_user_text(message):
-    my_personal_commands.beginning(message)
+    PersonalCommands.beginning(message)
     for el in req:
         if el == message.text.lower():
             req[el](message)
             return
     if message.text == emoji.emojize('Найти серию по фразе :speech_balloon:', use_aliases=True):
         bot.send_message(message.chat.id, 'Выбирай', reply_markup=keyboards.keyboard_phrases)
-        for_bot_handler.users[message.from_user.id] = "phrases"
+        BotHandlers.users[message.from_user.id] = "phrases"
     elif message.text.lower() == 'как это работает?' and \
-            for_bot_handler.users[message.from_user.id] == "phrases":
+            BotHandlers.users[message.from_user.id] == "phrases":
         bot.send_message(message.chat.id,
                          'Так как это работает?\n\nВы вводите какую-то фразу, которая уже есть в '
                          'списке и вам выдаётся серия, в которой она была.\n\nВводить фразу можно '
@@ -97,67 +97,67 @@ def for_user_text(message):
                          'что фразы не найдутся, если их нет в списке фраз.\n\nЕсли вы хотите, '
                          'чтобы ваша фраза там появилась, напишите это в разделе "Предложить идею" ('
                          'Меню->Другое->Предложить идею)', reply_markup=keyboards.keyboard_phrases)
-        for_bot_handler.users[message.from_user.id] = "phrases"
+        BotHandlers.users[message.from_user.id] = "phrases"
     elif message.text.lower() == 'all users':
-        my_personal_commands.print_all_users()
+        PersonalCommands.print_all_users()
         bot.send_message(message.chat.id, 'Выбери предпочтения', reply_markup=keyboards.keyboard1)
     elif message.text.lower() == "ввести фразу":
-        for_bot_handler.users[message.from_user.id] = "phrase_vvod"
+        BotHandlers.users[message.from_user.id] = "phrase_vvod"
         bot.send_message(message.chat.id, "Введите фразу\nили её номер со скобкой\n\nP.s. смотри инструкцию",
                          reply_markup=keyboards.keyboard_phrases)
     elif message.text.lower() == "фразы сайтамы":
-        for_bot_handler.users[message.from_user.id] = "phrases_list"
+        BotHandlers.users[message.from_user.id] = "phrases_list"
         bot.send_message(message.chat.id, "Фразы Сайтамы:\n\n1) Блин, я забыл купить бульон из комбу\n\n"
                                           '4) Эээ, реябят. Присмотрите за павшими героями. Нехорошо будет, '
                                           'если помрут. Кого мне тогда '
                                           'использовать?\n\n7) О, неплохой дроп',
                          reply_markup=keyboards.keyboard_phrases_list)
     elif message.text.lower() == "фразы других персонажей":
-        for_bot_handler.users[message.from_user.id] = "phrases_list"
+        BotHandlers.users[message.from_user.id] = "phrases_list"
         bot.send_message(message.chat.id,
                          "Фразы других персонажей:\n\nРебёнок-Император:\n2) Мне на подготовительные "
                          "надо, можно идти уже?\n\nГенос:\n5) У меня уже есть фанклуб",
                          reply_markup=keyboards.keyboard_phrases_list)
     elif message.text.lower() == "диалоги":
-        for_bot_handler.users[message.from_user.id] = "phrases_list"
+        BotHandlers.users[message.from_user.id] = "phrases_list"
         bot.send_message(message.chat.id,
                          "Диалоги:\n\nСайтама и Кинг:\n3) —Ну у тебя окно было открыто.\n—Вообще-то "
                          "мы на 22 этаже.\n\nБорос и Сайтама:\n6) -Пророчество сбылось, битва на "
                          "равных была хороша.\n-Ага. И правда.\n-Лжёшь, у тебя было преимущество. У "
                          "меня не было ни шанса. Я даже боя дать тебе не смог.",
                          reply_markup=keyboards.keyboard_phrases_list)
-    elif for_bot_handler.users[message.from_user.id] == "phrase_vvod":
-        for_bot_handler.users[message.from_user.id] = "phrases"
+    elif BotHandlers.users[message.from_user.id] == "phrase_vvod":
+        BotHandlers.users[message.from_user.id] = "phrases"
         print("phrase:", message.text)
         if message.text.lower() == "1)" or message.text.lower() == "блин, я забыл купить бульон из комбу":
-            my_personal_commands.send_video("1 сезон 6 серия", message)
+            PersonalCommands.send_video("1 сезон 6 серия", message)
             bot.send_message(message.chat.id,
                              'Фраза "блин, я забыл купить бульон из комбу" в 18:50\n(18 минут 50 секунд)',
                              reply_markup=keyboards.keyboard1)
         elif message.text.lower() == "2)" or message.text.lower() == "мне на подготовительные надо, можно идти уже?":
-            my_personal_commands.send_video("1 сезон 10 серия", message)
+            PersonalCommands.send_video("1 сезон 10 серия", message)
             bot.send_message(message.chat.id, 'Фраза "Мне на подготовительные '
                                               'надо, можно идти уже?" в 12:40\n(12 минут 40 секунд)',
                              reply_markup=keyboards.keyboard1)
         elif message.text.lower() == "5)" or message.text.lower() == "у меня уже есть фанклуб":
-            my_personal_commands.send_video("2 сезон 2 серия", message)
+            PersonalCommands.send_video("2 сезон 2 серия", message)
             bot.send_message(message.chat.id, 'Фраза '
                                               '"У меня уже есть фанклуб" в 06:10\n(6 минут 10 секунд)',
                              reply_markup=keyboards.keyboard1)
         elif message.text.lower() == "7)" or message.text.lower() == "о, неплохой дроп":
-            my_personal_commands.send_video("2 сезон 2 серия", message)
+            PersonalCommands.send_video("2 сезон 2 серия", message)
             bot.send_message(message.chat.id, 'Фраза '
                                               '"О, неплохой дроп" в 06:20\n(6 минут 20 секунд)',
                              reply_markup=keyboards.keyboard1)
         elif message.text.lower() == "3)" or message.text.lower() == '—ну у тебя окно было открыто.\n—вообще-то мы на '\
                                                                      '22 этаже.':
-            my_personal_commands.send_video("2 сезон 1 серия", message)
+            PersonalCommands.send_video("2 сезон 1 серия", message)
             bot.send_message(message.chat.id, 'Этот диалог был в 08:00\n(8-ая минута)',
                              reply_markup=keyboards.keyboard1)
         elif message.text.lower() == "4)" or message.text.lower() == 'эээ, реябят. присмотрите за павшими героями. ' \
                                                                      'нехорошо будет, если помрут. кого мне тогда ' \
                                                                      'использовать?':
-            my_personal_commands.send_video("1 сезон 9 серия", message)
+            PersonalCommands.send_video("1 сезон 9 серия", message)
             bot.send_message(message.chat.id,
                              'Фраза "Эээ, реябят. Присмотрите за павшими героями. Нехорошо будет, '
                              'если помрут. Кого мне тогда использовать?" в 15:08\n(15 минут 8 '
@@ -167,7 +167,7 @@ def for_user_text(message):
                                                              'хороша.\n-Ага. И правда.\n-Лжёшь, у тебя было ' \
                                                              'преимущество. У меня не было ни шанса. Я даже боя дать ' \
                                                              'тебе не смог.':
-            my_personal_commands.send_video("1 сезон 12 серия", message)
+            PersonalCommands.send_video("1 сезон 12 серия", message)
             bot.send_message(message.chat.id, 'Этот диалог был в 11:58\n(11-ая минута 58-ая секунда)',
                              reply_markup=keyboards.keyboard1)
         else:
@@ -175,20 +175,20 @@ def for_user_text(message):
                              'Такой фразы ещё нет, но вы можете добваить её в\nМеню->Другое->"Предложить идею"',
                              reply_markup=keyboards.keyboard1)
 
-    elif for_bot_handler.users[message.from_user.id] == "idea":
+    elif BotHandlers.users[message.from_user.id] == "idea":
         f = open('ideas.txt', 'a')
         f.write(str(message.from_user.id) + ' idea:' + str(message.text)+'\n')
         f.close()
-        for_bot_handler.users[message.from_user.id] = "join"
+        BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, "Спасибо, постараемся в "
                                           "кратчайшие сроки её реализовать", reply_markup=keyboards.keyboard1)
     elif message.text.lower() == 'найти серию по фразе':
-        for_bot_handler.users[message.from_user.id] = "find_seria"
+        BotHandlers.users[message.from_user.id] = "find_seria"
         bot.send_message(message.chat.id,
                          'Напиши фразу одним сообщением, если по твоей фразе ничего не нашлось, '
                          'напиши об этом в "Предложить идею"')
     elif message.text == emoji.emojize('Найти серию по картинке :sunrise_over_mountains:', use_aliases=True):
-        for_bot_handler.users[message.from_user.id] = "find_picture"
+        BotHandlers.users[message.from_user.id] = "find_picture"
         bot.send_message(message.chat.id,
                          'Пришлите картинку и вам вернётся: максимально похожая найденная картинка,'
                          ' серия в которой она найдена, а также время в серии.\n\nПри просмотре, '
@@ -197,7 +197,7 @@ def for_user_text(message):
                          'что она чётко взята/вырезана.\n\n (P.s. Найденные картинки могут быть '
                          'очень похожи, но не думайте, что эта та же картинка, что вы и прислали)')
     elif message.text == emoji.emojize('Предложить идею :bulb:', use_aliases=True):
-        for_bot_handler.users[message.from_user.id] = "idea"
+        BotHandlers.users[message.from_user.id] = "idea"
         bot.send_message(message.chat.id,
                          'Напиши одним сообщением какие изменения ты хотел бы видеть.\n\nЭто может '
                          'что угодно-от переставления кнопок в боте, до реализвации чего-нибудь '
@@ -205,64 +205,64 @@ def for_user_text(message):
                          'можете написать как вас зовут, чтобы во вкладке "О последнем обновлении" '
                          'мы написали благодаря кому это обновление.')
     elif message.text == emoji.emojize('О последнем обновлении :computer:', use_aliases=True):
-        for_bot_handler.users[message.from_user.id] = "join"
+        BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, 'Version 1.0.1\n\nДобавлен поиск серии по картинке.',
                          reply_markup=keyboards.keyboard1)
     elif message.text == emoji.emojize('Помощь авторам :mailbox:', use_aliases=True):
-        for_bot_handler.users[message.from_user.id] = "join"
+        BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id,
                          'Наш бот создан для истинных фанатов этого аниме. Единственную помощь '
                          'которую вы можете нам оказать-это распространять информацию если не о '
                          'нашем боте, то об этом аниме; а также предлагать идеи для улучшений.',
                          reply_markup=keyboards.keyboard1)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "persi":
-        for_bot_handler.users[message.from_user.id] = "join"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "persi":
+        BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, "Вы в главном меню", reply_markup=keyboards.keyboard1)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "heroes":
-        for_bot_handler.users[message.from_user.id] = "persi"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "heroes":
+        BotHandlers.users[message.from_user.id] = "persi"
         bot.send_message(message.chat.id, "Вы в меню персонажей", reply_markup=keyboards.keyboard_persi)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "a-class":
-        for_bot_handler.users[message.from_user.id] = "heroes"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "a-class":
+        BotHandlers.users[message.from_user.id] = "heroes"
         bot.send_message(message.chat.id, "Вы в меню героев", reply_markup=keyboards.keyboard_heroes)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "battles":
-        for_bot_handler.users[message.from_user.id] = "join"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "battles":
+        BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, "Вы в главном меню", reply_markup=keyboards.keyboard1)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "villains":
-        for_bot_handler.users[message.from_user.id] = "persi"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "villains":
+        BotHandlers.users[message.from_user.id] = "persi"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_persi)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "independent":
-        for_bot_handler.users[message.from_user.id] = "villains"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "independent":
+        BotHandlers.users[message.from_user.id] = "villains"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_villain)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "monsters":
-        for_bot_handler.users[message.from_user.id] = "villains"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "monsters":
+        BotHandlers.users[message.from_user.id] = "villains"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_villain)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "band":
-        for_bot_handler.users[message.from_user.id] = "villains"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "band":
+        BotHandlers.users[message.from_user.id] = "villains"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_villain)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "threats":
-        for_bot_handler.users[message.from_user.id] = "villains"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "threats":
+        BotHandlers.users[message.from_user.id] = "villains"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_villain)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "chamber":
-        for_bot_handler.users[message.from_user.id] = "villains"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "chamber":
+        BotHandlers.users[message.from_user.id] = "villains"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_villain)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "phrases":
-        for_bot_handler.users[message.from_user.id] = "join"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "phrases":
+        BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard1)
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "phrases_list":
-        for_bot_handler.users[message.from_user.id] = "phrases"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "phrases_list":
+        BotHandlers.users[message.from_user.id] = "phrases"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_phrases)
 
     elif message.text.lower() == 'посмотреть список фраз':
-        for_bot_handler.users[message.from_user.id] = "phrases_list"
+        BotHandlers.users[message.from_user.id] = "phrases_list"
         bot.send_message(message.chat.id, "Выбирай:", reply_markup=keyboards.keyboard_phrases_list)
     elif message.text == emoji.emojize('Найти серию по битве :boom:', use_aliases=True):
         bot.send_message(message.chat.id,
                          'Тут собраны не все битвы, если ты знаешь, что тут не хватает определённой '
                          'битвы, скажи это в "Предложить идею"', reply_markup=keyboards.keyboard_battles)
-        for_bot_handler.users[message.from_user.id] = "battles"
+        BotHandlers.users[message.from_user.id] = "battles"
     elif message.text.lower() == 'сайтама vs бороса':
-        my_personal_commands.send_video("1 сезон 11 серия", message)
-        my_personal_commands.send_video("1 сезон 12 серия", message)
+        PersonalCommands.send_video("1 сезон 11 серия", message)
+        PersonalCommands.send_video("1 сезон 12 серия", message)
         bot.send_photo(message.chat.id, "AgACAgIAAxkBAAIIq1-DUs-"
                                         "S0u5GXtWBJOpjvHrPN5anAAL0sTEbDEkYSOigWnDnYoXF1rzRly4AAwEAAwIAA3kAAxJ2AQABGwQ",
                        "Битва продолжительностью в 2 серии.")
@@ -281,7 +281,7 @@ def for_user_text(message):
                          'что даже тут Сайтама не дрался в полную силу, становится немного не по '
                          'себе.', reply_markup=keyboards.keyboard_battles)
     elif message.text.lower() == 'генос vs сайтамы':
-        my_personal_commands.send_video("1 сезон 5 серия", message)
+        PersonalCommands.send_video("1 сезон 5 серия", message)
         bot.send_photo(message.chat.id, 'AgACAgIAAxkBAAII4l'
                                         '-DVhgmzcRdMkHHts23Ecp2bDQjAAL4sTEbDEkYSL6Iytd12zumTH7Xli4AAwEAAwI'
                                         'AA3kAAwRCAgABGwQ')
@@ -302,8 +302,8 @@ def for_user_text(message):
                          'вместе, что мы увидим совсем скоро во втором сезоне.',
                          reply_markup=keyboards.keyboard_battles)
     elif message.text.lower() == 'герои vs морского царя':
-        my_personal_commands.send_video("1 сезон 8 серия", message)
-        my_personal_commands.send_video("1 сезон 9 серия", message)
+        PersonalCommands.send_video("1 сезон 8 серия", message)
+        PersonalCommands.send_video("1 сезон 9 серия", message)
         bot.send_photo(message.chat.id, 'AgACAgIAAxkBAAII7F'
                                         '-DVr5kw2iXBa87fD8Z5HNaaZ1lAAL5sTEbDEkYSAZ7bWAfM50iwLOUly4AAwEAAwIAA3kAAz'
                                         '-hAQABGwQ', "Битва продолжительностью в 2 серии.")
@@ -326,7 +326,7 @@ def for_user_text(message):
                          'невозможно.',
                          reply_markup=keyboards.keyboard_battles)
     elif message.text.lower() == 'сайтама vs сверхзвукового соника':
-        my_personal_commands.send_video("1 сезон 4 серия", message)
+        PersonalCommands.send_video("1 сезон 4 серия", message)
         bot.send_photo(message.chat.id, 'AgACAgIAAxkBAAIJAV'
                                         '-DV5IRq_GcP5vMc9ORLDigW83WAAL7sTEb'
                                         'DEkYSM8kmnXXuo4g5vfVli4AAwEAAwIAA3kAAz5IAgABGwQ')
@@ -342,7 +342,7 @@ def for_user_text(message):
                                           "можно только представить.\nЗабавный факт: тюремный номер Cоника — 4188.",
                          reply_markup=keyboards.keyboard_battles)
     elif message.text.lower() == 'сайтама vs ботана и качка':
-        my_personal_commands.send_video("1 сезон 1 серия", message)
+        PersonalCommands.send_video("1 сезон 1 серия", message)
         bot.send_photo(message.chat.id, 'AgACAgIAAxkBAAIJBV'
                                         '-DWFHHXpbLi1zysH0IkAABb4HxKgAC_LExGwxJGEgX5ou'
                                         'GQF0evvCr65cuAAMBAAMCAAN5AAN3qQEAARsE')
@@ -359,7 +359,7 @@ def for_user_text(message):
                          "лучших шуток аниме.",
                          reply_markup=keyboards.keyboard_battles)
     elif message.text.lower() == 'сайтама vs крабинатора':
-        my_personal_commands.send_video("1 сезон 1 серия", message)
+        PersonalCommands.send_video("1 сезон 1 серия", message)
         bot.send_photo(message.chat.id, 'AgACAgIAAxkBAAIJEF'
                                         '-DWR8sfhtFZGGalhC67r9KxpOfAAL9sTEbDEkYSKFjHRmSCOwCS2gWmC4AAwEAAwIAA3kAA1'
                                         '-lAQABGwQ')
@@ -583,55 +583,55 @@ def for_user_text(message):
                          'Здесь вся найденная информация о персонажах\n\nХочется отметить: чтобы '
                          'найти определённого персонажа, стоит лишь написать его имя боту, '
                          'и он сразу появится.', reply_markup=keyboards.keyboard_persi)
-        for_bot_handler.users[message.from_user.id] = "persi"
+        BotHandlers.users[message.from_user.id] = "persi"
     elif message.text.lower() == 'герои':
         bot.send_message(message.chat.id, 'Вы в меню героев', reply_markup=keyboards.keyboard_heroes)
-        for_bot_handler.users[message.from_user.id] = "heroes"
+        BotHandlers.users[message.from_user.id] = "heroes"
     elif message.text.lower() == 'злодеи':
         bot.send_message(message.chat.id, 'Вы в меню злодеев', reply_markup=keyboards.keyboard_villain)
-        for_bot_handler.users[message.from_user.id] = "villains"
+        BotHandlers.users[message.from_user.id] = "villains"
     elif message.text.lower() == 'a-класс':
         bot.send_message(message.chat.id, 'A-класс', reply_markup=keyboards.keyboard_A_class)
-        for_bot_handler.users[message.from_user.id] = "a-class"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "a-class1_10":
+        BotHandlers.users[message.from_user.id] = "a-class"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "a-class1_10":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_A_class)
-        for_bot_handler.users[message.from_user.id] = "a-class"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "b-class":
+        BotHandlers.users[message.from_user.id] = "a-class"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "b-class":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_heroes)
-        for_bot_handler.users[message.from_user.id] = "heroes"
-    elif message.text.lower() == '1-10 место' and for_bot_handler.users[message.from_user.id] == "a-class":
+        BotHandlers.users[message.from_user.id] = "heroes"
+    elif message.text.lower() == '1-10 место' and BotHandlers.users[message.from_user.id] == "a-class":
         bot.send_message(message.chat.id, '1-10 место:', reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'b-класс':
         bot.send_message(message.chat.id, 'B класс:', reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 's-класс':
         bot.send_message(message.chat.id, 'S класс:', reply_markup=keyboards.keyboard_S_class)
-        for_bot_handler.users[message.from_user.id] = "s-class"
-    elif message.text.lower() == '1-10 место' and for_bot_handler.users[message.from_user.id] == "s-class":
+        BotHandlers.users[message.from_user.id] = "s-class"
+    elif message.text.lower() == '1-10 место' and BotHandlers.users[message.from_user.id] == "s-class":
         bot.send_message(message.chat.id, '1-10 место:', reply_markup=keyboards.keyboard_S_class1_10)
-        for_bot_handler.users[message.from_user.id] = "s-class1_10"
-    elif message.text.lower() == '11-17 место' and for_bot_handler.users[message.from_user.id] == "s-class":
+        BotHandlers.users[message.from_user.id] = "s-class1_10"
+    elif message.text.lower() == '11-17 место' and BotHandlers.users[message.from_user.id] == "s-class":
         bot.send_message(message.chat.id, '1-10 место:', reply_markup=keyboards.keyboard_S_class11_17)
-        for_bot_handler.users[message.from_user.id] = "s-class11_17"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "s-class1_10":
+        BotHandlers.users[message.from_user.id] = "s-class11_17"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "s-class1_10":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_S_class)
-        for_bot_handler.users[message.from_user.id] = "s-class"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "s-class11_17":
+        BotHandlers.users[message.from_user.id] = "s-class"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "s-class11_17":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_S_class)
-        for_bot_handler.users[message.from_user.id] = "s-class"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "s-class":
+        BotHandlers.users[message.from_user.id] = "s-class"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "s-class":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_heroes)
-        for_bot_handler.users[message.from_user.id] = "heroes"
+        BotHandlers.users[message.from_user.id] = "heroes"
     elif message.text.lower() == 'c-класс':
         bot.send_message(message.chat.id, 'C класс:', reply_markup=keyboards.keyboard_C_class)
-        for_bot_handler.users[message.from_user.id] = "c-class"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "c-class":
+        BotHandlers.users[message.from_user.id] = "c-class"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "c-class":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_heroes)
-        for_bot_handler.users[message.from_user.id] = "heroes"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "neutral":
+        BotHandlers.users[message.from_user.id] = "heroes"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "neutral":
         bot.send_message(message.chat.id, 'Вернулись', reply_markup=keyboards.keyboard_persi)
-        for_bot_handler.users[message.from_user.id] = "persi"
+        BotHandlers.users[message.from_user.id] = "persi"
     elif message.text.lower() == 'пиратская банда «тёмная материя»':
         bot.send_message(message.chat.id,
                          'Группа разнокалиберных пришельцев под предводительством рыцаря крови Бороса, прибывших на '
@@ -639,18 +639,18 @@ def for_user_text(message):
                          'двадцатилетней давности, которая как раз и перестала выпускаться из-за раскачки '
                          'нижеприведённых персон до унылой непобедимости.',
                          reply_markup=keyboards.keyboard_band)
-        for_bot_handler.users[message.from_user.id] = "band"
+        BotHandlers.users[message.from_user.id] = "band"
     elif message.text.lower() == 'нейтральные персонажи':
         bot.send_message(message.chat.id,
                          'Вроде бы и не злодеи, но в герои точно не набиваются. Если присмотреться хорошенько, '
                          'таких персонажей в манге не мало.',
                          reply_markup=keyboards.keyboard_neutral)
-        for_bot_handler.users[message.from_user.id] = "neutral"
+        BotHandlers.users[message.from_user.id] = "neutral"
     elif message.text.lower() == 'храм/палата эволюции':
         bot.send_message(message.chat.id,
                          'Храм/Палата эволюции',
                          reply_markup=keyboards.keyboard_chamber)
-        for_bot_handler.users[message.from_user.id] = "chamber"
+        BotHandlers.users[message.from_user.id] = "chamber"
     elif message.text.lower() == 'доктор генус':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ8l-N3MbDSAtRMnqPQyi'
@@ -668,7 +668,7 @@ def for_user_text(message):
                        'что в то время Сайтама был нулём без палочки, для которого даже такие тренировки были адскими '
                        'муками.',
                        reply_markup=keyboards.keyboard_chamber)
-        for_bot_handler.users[message.from_user.id] = "chamber"
+        BotHandlers.users[message.from_user.id] = "chamber"
     elif message.text.lower() == 'асура кабуто':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ81-N3WmmlIaukv'
@@ -685,7 +685,7 @@ def for_user_text(message):
                        'что Сайтама превышает все его характеристики, однако продолжил сражаться с ним демонстрируя '
                        'все свои способности.',
                        reply_markup=keyboards.keyboard_chamber)
-        for_bot_handler.users[message.from_user.id] = "chamber"
+        BotHandlers.users[message.from_user.id] = "chamber"
     elif message.text.lower() == 'царь зверей':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ9F'
@@ -693,14 +693,14 @@ def for_user_text(message):
                        'Царь зверей: здоровенный накачанный человек-лев с непомерным самомнением. Попытался нарезать '
                        'Сайтаму на ломтики своими когтями и был перемолот в фарш «шквалом обычных ударов».',
                        reply_markup=keyboards.keyboard_chamber)
-        for_bot_handler.users[message.from_user.id] = "chamber"
+        BotHandlers.users[message.from_user.id] = "chamber"
     elif message.text.lower() == 'земляной дракон':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ9V-N3jeJ2KtqM7lho9T7dj'
                        '-CraBOAAKksDEb6HZpSJoqHca9l4m4cAzHly4AAwEAAwIAA20AA77MAQABGwQ',
                        'Земляной дракон: слегка антропоморфный крот. Попытался прикопать Сайтаму…',
                        reply_markup=keyboards.keyboard_chamber)
-        for_bot_handler.users[message.from_user.id] = "chamber"
+        BotHandlers.users[message.from_user.id] = "chamber"
     elif message.text.lower() == 'бронированная горилла':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ9l'
@@ -711,7 +711,7 @@ def for_user_text(message):
                        'предупредил своих о грядущих неприятностях. В манге и аниме работает вместе с Генусом в их '
                        'ресторанчике.',
                        reply_markup=keyboards.keyboard_chamber)
-        for_bot_handler.users[message.from_user.id] = "chamber"
+        BotHandlers.users[message.from_user.id] = "chamber"
     elif message.text.lower() == 'мельзальгальд':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ7l-N184M8f8XsBX_XXw8wQt_vrYdAAKTsDEb6HZpSNpsB4u7P'
@@ -724,7 +724,7 @@ def for_user_text(message):
                        'довольно долго сражался разом со Стальной Битой, Серебряным Клыком, Атомным Самураем и '
                        'Гомо-Гомо Зеком, и проиграл (а Сайтама в это время всю войну выиграл).',
                        reply_markup=keyboards.keyboard_band)
-        for_bot_handler.users[message.from_user.id] = "band"
+        BotHandlers.users[message.from_user.id] = "band"
     elif message.text.lower() == 'генгальшп':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ71'
@@ -734,7 +734,7 @@ def for_user_text(message):
                        'показать себя, был убит Сайтамой броском камня. В аниме попытался раздавить его '
                        'гравитационным полем, надо ли говорить, что не получилось.',
                        reply_markup=keyboards.keyboard_band)
-        for_bot_handler.users[message.from_user.id] = "band"
+        BotHandlers.users[message.from_user.id] = "band"
     elif message.text.lower() == 'глорибас':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ8F'
@@ -743,7 +743,7 @@ def for_user_text(message):
                        'своем боевом мастерстве. Он кажется немного глуповатым, не в состоянии решить, какие движения '
                        'использовать в бою, направляясь к Сайтаме. Он любил медленно убивать своих врагов.',
                        reply_markup=keyboards.keyboard_band)
-        for_bot_handler.users[message.from_user.id] = "band"
+        BotHandlers.users[message.from_user.id] = "band"
     elif message.text.lower() == 'борос':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ8V'
@@ -769,7 +769,7 @@ def for_user_text(message):
                          'был слишком силён.», оставляя читателей гадать, на что же способен не сдерживающийся'
                          'Сайтама.',
                          reply_markup=keyboards.keyboard_band)
-        for_bot_handler.users[message.from_user.id] = "band"
+        BotHandlers.users[message.from_user.id] = "band"
     elif message.text.lower() == 'сверхзвуковой соник':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIRdF'
@@ -804,7 +804,7 @@ def for_user_text(message):
                          'сырой '
                          'и целиком, и долго скакал на толчке.',
                          reply_markup=keyboards.keyboard_neutral)
-        for_bot_handler.users[message.from_user.id] = "neutral"
+        BotHandlers.users[message.from_user.id] = "neutral"
     elif message.text.lower() == 'сойрю':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIRdV'
@@ -829,7 +829,7 @@ def for_user_text(message):
                          'в придачу), подорвав позиции тех, кто писал, что Мурата придумал ненужного перса и зря '
                          'забил главы филлерным турниром.',
                          reply_markup=keyboards.keyboard_neutral)
-        for_bot_handler.users[message.from_user.id] = "neutral"
+        BotHandlers.users[message.from_user.id] = "neutral"
     elif message.text.lower() == 'гароу':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ6l-N08z0ZqJnS6WBr6auLNtGj9ttAAKAsDEb6HZpSEfiK3G8OeuR'
@@ -877,7 +877,7 @@ def for_user_text(message):
                          'убивает, и при этом несмотря на то что говорит что он монстр, к Ассоциации монстров '
                          'присоединяться не хочет.',
                          reply_markup=keyboards.keyboard_independent)
-        for_bot_handler.users[message.from_user.id] = "independent"
+        BotHandlers.users[message.from_user.id] = "independent"
     elif message.text.lower() == 'морской капустень':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ61'
@@ -889,12 +889,12 @@ def for_user_text(message):
                        'напрягаясь вырубил обоих, но тут появился Сайтама, который как раз мечтал о средстве для '
                        'ращения волос из водорослей и ободрал беднягу-монстра до предпоследнего листка.',
                        reply_markup=keyboards.keyboard_independent)
-        for_bot_handler.users[message.from_user.id] = "independent"
+        BotHandlers.users[message.from_user.id] = "independent"
     elif message.text.lower() == 'независимые':
         bot.send_message(message.chat.id,
                          'Независимые злодеи',
                          reply_markup=keyboards.keyboard_independent)
-        for_bot_handler.users[message.from_user.id] = "independent"
+        BotHandlers.users[message.from_user.id] = "independent"
     elif message.text.lower() == 'братья мозг и мышцы':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ7F'
@@ -906,12 +906,12 @@ def for_user_text(message):
                        'заметив, что обладать сверхсилой довольно скучно, убил Качка одним ударом в щи, '
                        'обрушив гиганта на город D. От которого остались одни руины.',
                        reply_markup=keyboards.keyboard_independent)
-        for_bot_handler.users[message.from_user.id] = "independent"
+        BotHandlers.users[message.from_user.id] = "independent"
     elif message.text.lower() == 'ассоциация монстров':
         bot.send_message(message.chat.id,
                          'Ассоциация',
                          reply_markup=keyboards.keyboard_monsters)
-        for_bot_handler.users[message.from_user.id] = "monsters"
+        BotHandlers.users[message.from_user.id] = "monsters"
     elif message.text.lower() == 'царь монстров орочи':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ6F-N0Dk'
@@ -942,7 +942,7 @@ def for_user_text(message):
                          'человеком, который уже терял свою человечность, когда встретился с Гёро-Гёро. Это делало его '
                          'подходящим кандидатом на пост будущего Короля Монстров.',
                          reply_markup=keyboards.keyboard_monsters)
-        for_bot_handler.users[message.from_user.id] = "monsters"
+        BotHandlers.users[message.from_user.id] = "monsters"
     elif message.text.lower() == 'псайкос':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIQ6V-N0q2VWQrNXyG-m3p9L9Gzmp5YAAJ'
@@ -960,7 +960,7 @@ def for_user_text(message):
                        'была выдрана из монстрячьего тела… как оказалось нет. Это была кукла, а сама Псайкос сидела '
                        'глубоко под землёй.',
                        reply_markup=keyboards.keyboard_monsters)
-        for_bot_handler.users[message.from_user.id] = "monsters"
+        BotHandlers.users[message.from_user.id] = "monsters"
     elif message.text.lower() == 'милая маска':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIHeF-DNNdv-9_nNHMgbBtz8yazsHg3AAKrsTEbDEkYSIdHojXGyQs89PfVli4AAwEAAwIAA3gAAwo'
@@ -978,7 +978,7 @@ def for_user_text(message):
                        'когда маска была повреждена — ещё и потрясающую внешность. Однако осознал, что, '
                        'по сути сам стал монстром (такая вот ирония судьбы)',
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'иайан':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIIXF-DRg025t_MUbP'
@@ -988,7 +988,7 @@ def for_user_text(message):
                        "Также носит тяжелые на вид доспехи, похожие на рыцарские. Первым схватился с Мельзальгальдом, "
                        "потерял в этой схватке левую руку, но уцелел.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'окамаитачи':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIIj1'
@@ -997,7 +997,7 @@ def for_user_text(message):
                        "трансвестит, да еще и гей впридачу. Впрочем, менее опасным это его не делает. "
                        "Специализируется на режущих воздушных волнах.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'бусидрель':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIIll-DSydgK1IMSC48A-OZ6h0WofasAALnsTEbDEkYSHRbCPEO8K74YAgglS4AAwEAAwIAA3gAA'
@@ -1005,7 +1005,7 @@ def for_user_text(message):
                        "Бусидрель: 4 место. Третий ученик Атомного Самурая. Использует катану и вакидзаши, "
                        "специализируется на колющих атаках.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'тяжелый танк фундоши':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIIm1-DS79OOefCFmA9NDZ3sQ7LxcdAAALosTEbDEkYSAnY9v2cpnZkNKJpli4AAwEAAwIAA3gAAxh'
@@ -1016,7 +1016,7 @@ def for_user_text(message):
                        "переговорах с местными криминальными элементами. Попытался залепить своим залпом по Гароу, "
                        "но тот увернулся, Танк попал в пол и сломал руку. Далее Гароу вырубил его одним апперкотом.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'синее пламя':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIInF'
@@ -1028,7 +1028,7 @@ def for_user_text(message):
                        "председателя Ассоциации на переговорах с местными криминальными элементами. В сражении с "
                        "Гароу потерял руки.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'фокусник':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIJx1-ECf7Rfgt9zF0zK4CfiRjvbgl6AAKArzEbDEkgSMG2lLaa'
@@ -1038,7 +1038,7 @@ def for_user_text(message):
                        "председателя Ассоциации на переговорах с местными криминальными элементами. Показать ничего "
                        "не смог, Гароу уложил его за кадром.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'стингер':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIJzF'
@@ -1049,7 +1049,7 @@ def for_user_text(message):
                        "но из-за привычки рисоваться получил по морде от Морского Царя и надолго выбыл из строя. "
                        "Далее появляется, сражаясь вместе с Молнией Генджи с котоподобным монстром Куснякой.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'два хвостика':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIJz1-EEU7SsG20cClrkD4LK3tRJ0LTAAKQrzEbDEkgSE_jZrDyDLv'
@@ -1061,7 +1061,7 @@ def for_user_text(message):
                        "видимости, слепа: глаза её скрыты повязкой, но обладает хорошим слухом и может отслеживать "
                        "противников по дыханию.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'гатлинг смерти':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIJ4F'
@@ -1070,7 +1070,7 @@ def for_user_text(message):
                        "Осьминогом, но все три "
                        "героя быстро проигрывают.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
     elif message.text.lower() == 'вегетарианец в майке':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIJ4V'
@@ -1080,15 +1080,15 @@ def for_user_text(message):
                        "Осьминогом, но все три "
                        "героя быстро проигрывают.",
                        reply_markup=keyboards.keyboard_A_class1_10)
-        for_bot_handler.users[message.from_user.id] = "a-class1_10"
-    elif message.text.lower() == '11-39 место' and for_bot_handler.users[message.from_user.id] == "a-class":
+        BotHandlers.users[message.from_user.id] = "a-class1_10"
+    elif message.text.lower() == '11-39 место' and BotHandlers.users[message.from_user.id] == "a-class":
         bot.send_message(message.chat.id, "11-39 место",
                          reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
-    elif message.text.lower() == 'назад' and for_bot_handler.users[message.from_user.id] == "a-class11_39":
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
+    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "a-class11_39":
         bot.send_message(message.chat.id, "Вернулись",
                          reply_markup=keyboards.keyboard_A_class)
-        for_bot_handler.users[message.from_user.id] = "a-class"
+        BotHandlers.users[message.from_user.id] = "a-class"
     elif message.text.lower() == 'великий философ':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKZl'
@@ -1100,7 +1100,7 @@ def for_user_text(message):
                        "приём — «Три тонны философии»: он закрывает свою книгу, после чего со всей дури лупасит врага "
                        "корешком. Вполне возможно, что как раз три тонны эта книженция и весит.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'молния генджи':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKb1-EKOGUV0drQMCHbHZI9dCdQ'
@@ -1114,7 +1114,7 @@ def for_user_text(message):
                        "врагов ему сражаться очень тяжело. Посему битву с Человеком-сомом и Мейко Плазмой он не "
                        "потянул.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'макс-молния':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKgF'
@@ -1125,7 +1125,7 @@ def for_user_text(message):
                        "искусствам. Первый поединок — с «китаянкой» Лин-Лин — выиграл без особых проблем, "
                        "второй поединок с кунфуистом Суирю не осилил.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'смайл':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKgV'
@@ -1137,7 +1137,7 @@ def for_user_text(message):
                        "дольних дистанциях. Несмотря на прозвище, никогда не улыбается и не воспринимает юмор. "
                        "Несколько раз мелькал в аниме, на заднем плане.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'золотой шар':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKgl'
@@ -1149,7 +1149,7 @@ def for_user_text(message):
                        "Морским Капустенем, но отвлекся на то, как легко Капустень отбил его дротик и потому "
                        "проиграл.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'пружинящий ус':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKk1'
@@ -1162,7 +1162,7 @@ def for_user_text(message):
                        "Золотым Шаром, сражался с Морским Капустенем, но продержался недолго (а потом Капустеня "
                        "ободрал Сайтама). Похоже, они с Золотым Шаром приятели — появляются обычно вместе.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'снек':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKlF'
@@ -1177,7 +1177,7 @@ def for_user_text(message):
                        "этому — был впечатан в стену. Участвует в турнирах по боевым искусствам и довольно хорош в "
                        "этом деле.",
                        reply_markup=keyboards.keyboard_A_class11_39)
-        for_bot_handler.users[message.from_user.id] = "a-class11_39"
+        BotHandlers.users[message.from_user.id] = "a-class11_39"
     elif message.text.lower() == 'чёрная дыра в майке':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIKuV-EMOPT3MgUKcQ_KxztDD3kMGQnAALArzEbDEkgSBi51tx'
@@ -1189,7 +1189,7 @@ def for_user_text(message):
                        "что герой С-класса может уничтожить метеор. Он также довольно харизматичный человек, "
                        "что показано через его способность склонять толпу к своей вол",
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'фубуки адская метель':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK2F-ENyjVEm2p4_tNWmCuAthYJf7BAALErzEbDEkgSEfLvzGT'
@@ -1204,7 +1204,7 @@ def for_user_text(message):
                        "она обучает более-менее выдающихся последователей псионике), и она не раз втягивала Сайтаму и "
                        "его «группировку» в очередные соревнования.",
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'реснички':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK2V-EN1'
@@ -1212,7 +1212,7 @@ def for_user_text(message):
                        "Реснички: 2 место. Одетый в тройку парень с длинными ресницами, состоящий у Фубуки в "
                        "шестерках. Псионик, может изменять форму своего оружия — щипчиков для завивки ресниц.",
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'горная обезьяна':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK2l-EN-Tynp2VJaM4FoU3fCE_rWfmAALGrzEbDEkgSJDBq4aY'
@@ -1220,7 +1220,7 @@ def for_user_text(message):
                        "Горная Обезьяна: 3 место. Громила в тройке, еще одна шестерка Фубуки. Укрепляет свое тело "
                        "псионической силой, так что смог пережить атаку Татцумаки.",
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'очкарик':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK3V'
@@ -1228,7 +1228,7 @@ def for_user_text(message):
                        "Очкарик: 20 место. Состоял в группировке Фубуки, но ушёл на вольные хлеба. Сражался с Гароу, "
                        "демонстрируя навыки боевых искусств, но всё же был им оттделан.",
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'реактивный добряк':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK3F-EONyPGi'
@@ -1239,7 +1239,7 @@ def for_user_text(message):
                        'монстров. Теперь носит имя: "Возродившийся Реактивный Добряк". Один из немногих героев в '
                        'B-классе, кто не присоединился к Фубуки.',
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'лили':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK21-EOMLOXSSOXj'
@@ -1248,7 +1248,7 @@ def for_user_text(message):
                        "временами косячит, но соратники в беде не бросят. Тоже владеет псионикой, н на весьма низком "
                        "уровне. В бою полагается на нунчаки.",
                        reply_markup=keyboards.keyboard_B_class)
-        for_bot_handler.users[message.from_user.id] = "b-class"
+        BotHandlers.users[message.from_user.id] = "b-class"
     elif message.text.lower() == 'бесправный ездок':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK8l-EPOKRAcwxwq9RUxa0pMKGMH6OAALOrzEbDEkgSCYbgnBVBg15VWYWmC4AAwEAAwIAA20AA3'
@@ -1261,7 +1261,7 @@ def for_user_text(message):
                        'царём и повышения Сайтамы проставился в знак уважения и благодарности. Персонаж - явная '
                        'отсылка к токусацу "Наездник в маске"',
                        reply_markup=keyboards.keyboard_C_class)
-        for_bot_handler.users[message.from_user.id] = "c-class"
+        BotHandlers.users[message.from_user.id] = "c-class"
     elif message.text.lower() == 'тигр в майке':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK8V-EPKs0CcsKtZ6b-HvV8'
@@ -1271,7 +1271,7 @@ def for_user_text(message):
                        "в своих способностях и смотрит свысока на новых героев, будучи довольно высокомерным и "
                        "враждебным.",
                        reply_markup=keyboards.keyboard_C_class)
-        for_bot_handler.users[message.from_user.id] = "c-class"
+        BotHandlers.users[message.from_user.id] = "c-class"
     elif message.text.lower() == 'жужжащий человек':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAIK8F-EO-arVuEBA9qU4xk8CMX33ZP0AALMrzEbDEkgSGekL3FbznK'
@@ -1283,7 +1283,7 @@ def for_user_text(message):
                        "Морскому Царю, когда тот собирался убить всех людей находящихся в куполе, несмотря на свою "
                        "храбрость, выражение его лица ясно дало понять, что он был напуган.",
                        reply_markup=keyboards.keyboard_C_class)
-        for_bot_handler.users[message.from_user.id] = "c-class"
+        BotHandlers.users[message.from_user.id] = "c-class"
     elif message.text.lower() == 'бласт':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAILEF-EW-dHKET04qi4ZI956f'
@@ -1296,7 +1296,7 @@ def for_user_text(message):
                        'но судя по реакции ребёнка-императора, Бласт имеет привычку не появляться на заседаниях '
                        'Ассоциации героев. Подобно Сайтаме, он принимает работу супергероя в качестве хобби',
                        reply_markup=keyboards.keyboard_S_class1_10)
-        for_bot_handler.users[message.from_user.id] = "s-class1_10"
+        BotHandlers.users[message.from_user.id] = "s-class1_10"
     elif message.text.lower() == 'тацумаки':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAILEV-EW_cNo2gn4slprod1XSfnJvfdAAIEsDEbDEkgSFF'
@@ -1311,7 +1311,7 @@ def for_user_text(message):
                        'обломков зданий, хотя сбить так и не смогла. В аниме чуть раньше этих событий уронила '
                        'здоровенный метеорит на древнего ящера-кайдзю, благополучно его убив.',
                        reply_markup=keyboards.keyboard_S_class1_10)
-        for_bot_handler.users[message.from_user.id] = "s-class1_10"
+        BotHandlers.users[message.from_user.id] = "s-class1_10"
     elif message.text.lower() == 'бэнг':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAILEl'
@@ -1339,7 +1339,7 @@ def for_user_text(message):
                          'но не только в качестве тренировок — лишь бы в его голове не оставалось места для крамольных '
                          'мыслей, толкнувших его предшественника на скользкую дорожку. Как и Бомб, в Ассоциацию не '
                          'входит.', reply_markup=keyboards.keyboard_S_class1_10)
-        for_bot_handler.users[message.from_user.id] = "s-class1_10"
+        BotHandlers.users[message.from_user.id] = "s-class1_10"
     elif message.text.lower() == 'атомный самурай':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAILE1'
@@ -1352,7 +1352,7 @@ def for_user_text(message):
                        'штурма Ассоциации монстров без проблем кромсал всё, что шевелится, но столкнувшись с '
                        'Черноспермием — что выращивал свои копии из своих же кусочков — выгреб по полной.',
                        reply_markup=keyboards.keyboard_S_class1_10)
-        for_bot_handler.users[message.from_user.id] = "s-class1_10"
+        BotHandlers.users[message.from_user.id] = "s-class1_10"
     elif message.text.lower() == 'ребёнок-император':
         bot.send_photo(message.chat.id,
                        'AgACAgIAAxkBAAILFF-EXAmRTstNuA9tAilE3l2gE2k'
@@ -1363,9 +1363,9 @@ def for_user_text(message):
                        'значительно слабее, хотя паренек довольно развит физически (сильнее Стингера) и также хороший '
                        'стратег. Образ вдохновлён мелким суперзлодеем Гизмо из мультсериала «Teen Titans».',
                        reply_markup=keyboards.keyboard_S_class1_10)
-        for_bot_handler.users[message.from_user.id] = "s-class1_10"
+        BotHandlers.users[message.from_user.id] = "s-class1_10"
     else:
-        endfunc(message)
+        datanotfound(message)
 
 
 def bofoi(message):
@@ -1379,7 +1379,7 @@ def bofoi(message):
                    'Бороса. Попытался напасть на Древнюю многоножку, но не смог её даже поцарапать, и та утащила '
                    'робота в логово Ассоциации монстров.',
                    reply_markup=keyboards.keyboard_S_class1_10)
-    for_bot_handler.users[message.from_user.id] = "s-class1_10"
+    BotHandlers.users[message.from_user.id] = "s-class1_10"
 
 
 def king(message):
@@ -1395,7 +1395,7 @@ def king(message):
                    'одиночку сдерживал четверых монстров драконьего уровня одними словами. Возможно является '
                    'скрытым эспером, манипулирующим вероятностями.',
                    reply_markup=keyboards.keyboard_S_class1_10)
-    for_bot_handler.users[message.from_user.id] = "s-class1_10"
+    BotHandlers.users[message.from_user.id] = "s-class1_10"
 
 
 def zombie(message):
@@ -1408,7 +1408,7 @@ def zombie(message):
                    'словам ONE — слабейший в S классе. Во время штурма гнезда монстров сражался с '
                    'монстром-вампиром, и победил фактически измором.',
                    reply_markup=keyboards.keyboard_S_class1_10)
-    for_bot_handler.users[message.from_user.id] = "s-class1_10"
+    BotHandlers.users[message.from_user.id] = "s-class1_10"
 
 
 def knight(message):
@@ -1428,10 +1428,10 @@ def knight(message):
                    'мир и специально пожертвовал своим роботом, чтобы монстры смогли изучить его и через это '
                    'разделаться с героями.',
                    reply_markup=keyboards.keyboard_S_class1_10)
-    for_bot_handler.users[message.from_user.id] = "s-class1_10"
+    BotHandlers.users[message.from_user.id] = "s-class1_10"
 
 
-def pig(message):
+def HeroPig(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILGV-EXCzMOshcZWfHf'
                    '-RDMhbBI0PwAAIMsDEbDEkgSMB_udsWKox7Ow3Hly4AAwEAAwIAA3gAAzWAAQABGwQ',
@@ -1440,10 +1440,10 @@ def pig(message):
                    'нему не скажешь), а его жирок отлично защищает от ударов. Возможно, монстр, которому нравится '
                    'кушать монстров.',
                    reply_markup=keyboards.keyboard_S_class1_10)
-    for_bot_handler.users[message.from_user.id] = "s-class1_10"
+    BotHandlers.users[message.from_user.id] = "s-class1_10"
 
 
-def sverx(message):
+def HeroSverx(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILGl'
                    '-EXDCDSDXOYkaHrQVUzYgZoz68AAINsDEbDEkgSJsRPJFvxgoqyvLAly4AAwEAAwIAA3gAA89_AQABGwQ',
@@ -1456,10 +1456,10 @@ def sverx(message):
                    'ходу боя, Гароу смог победить. Поражения так потрясло Суперсплава, что он оставил пост героя '
                    'и переквалифицировался в инструкторы для начинающих.',
                    reply_markup=keyboards.keyboard_S_class11_17)
-    for_bot_handler.users[message.from_user.id] = "s-class11_17"
+    BotHandlers.users[message.from_user.id] = "s-class11_17"
 
 
-def dog(message):
+def HeroDog(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILG1'
                    '-EXDUiaIEk2fT3B5NHHXfmmFXaAAIOsDEbDEkgSCMV0NKhz9Y5Xxfnly4AAwEAAwIAA20AA4StAQABGwQ',
@@ -1469,10 +1469,10 @@ def dog(message):
                    'являются), внешне всегда спокоен и даже пофигистичен, с виду невзрачен (не считая костюма) и '
                    'пробивался с самых низов C класса. Костюм до боли напоминает Хатико.',
                    reply_markup=keyboards.keyboard_S_class11_17)
-    for_bot_handler.users[message.from_user.id] = "s-class11_17"
+    BotHandlers.users[message.from_user.id] = "s-class11_17"
 
 
-def bit(message):
+def HeroBita(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILHV'
                    '-EXEAqcBYRfd4zTd1OAWWMNwXpAAIQsDEbDEkgSF625NbehySJnqDoly4AAwEAAwIAA3gAA4GsAQABGwQ',
@@ -1489,10 +1489,10 @@ def bit(message):
                    'не трогает детей. Едва не рванул «добивать» многоножку, но сестренка своим подзатыльником '
                    'снесла гопнику последние ХП.',
                    reply_markup=keyboards.keyboard_S_class11_17)
-    for_bot_handler.users[message.from_user.id] = "s-class11_17"
+    BotHandlers.users[message.from_user.id] = "s-class11_17"
 
 
-def zek(message):
+def HeroGomoZek(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILH1-EXEgdEBUmcYPKfXVd2KD0TJ9pAAISsDEbDEkgSPSIs4iTHbN6cE3zly4AAwEAAwIAA3gAA'
                    '-ucAQABGwQ')
@@ -1517,10 +1517,10 @@ def zek(message):
                      'камне и рушить стены касанием пальца. Случайно нашел полудохлого Гароу (в лицо его Зек не '
                      'знал) и решил освободить, но тот свалил Зека одним ударом.',
                      reply_markup=keyboards.keyboard_S_class11_17)
-    for_bot_handler.users[message.from_user.id] = "s-class11_17"
+    BotHandlers.users[message.from_user.id] = "s-class11_17"
 
 
-def henos(message):
+def HeroHenos(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILIF-EXExJZEnoshbo9'
                    '-YmblwFxijNAAITsDEbDEkgSCKwCUuKC42tOaHoly4AAwEAAwIAA3gAAw2uAQABGwQ')
@@ -1544,10 +1544,10 @@ def henos(message):
                      'сёнёнскую крутизну, пафос и превозмогание, посему постоянно огребает люлей (в основном — '
                      'из-за собственной самоуверенности), а потом приходит Сайтама и всё разруливает.',
                      reply_markup=keyboards.keyboard_heroes)
-    for_bot_handler.users[message.from_user.id] = "heroes"
+    BotHandlers.users[message.from_user.id] = "heroes"
 
 
-def saitama(message):
+def HeroSaitama(message):
     bot.send_photo(message.chat.id,
                    'AgACAgIAAxkBAAILIV-EXFDriBeWcqs6zie5J46gh_'
                    '-LAAIUsDEbDEkgSOxO7ND8ETQpQ0wQmC4AAwEAAwIAA20AA6CpAQABGwQ')
@@ -1601,18 +1601,19 @@ def saitama(message):
                      'значительно более упрощенном стиле, чем всё остальное, и выглядит плоским. Трёхмерность же '
                      'обретает только в моменты, когда выходит из своего пофигистичного состояния.',
                      reply_markup=keyboards.keyboard_heroes)
-    for_bot_handler.users[message.from_user.id] = "heroes"
+    BotHandlers.users[message.from_user.id] = "heroes"
 
 
-def counter(message):
-    result = for_db.count()
-    for_bot_handler.bot.send_message(message.chat.id, result[0][0], reply_markup=keyboards.keyboard1)
+def counter_of_users(message):
+    result = db.count()
+    BotHandlers.bot.send_message(message.chat.id, result[0][0], reply_markup=keyboards.keyboard1)
 
 
-req = {'уровни угроз': threats_do, 'демонический': threats_do, 'волчий': threats_do, 'драконий': threats_do,
-       'тигриный': threats_do, 'божественный': threats_do, 'генос': henos, 'сайтама': saitama, 'гомо-гомо зек': zek,
-       'counter of users': counter, 'стальная бита': bit, 'мастер в майке': master, 'световой флэш': flash,
-       'сторожевой пёс': dog, 'сверхлитой темноблеск': sverx, 'свинобог': pig, 'технорыцарь': knight,
+req = {'уровни угроз': SendThreats, 'демонический': SendThreats, 'волчий': SendThreats, 'драконий': SendThreats,
+       'тигриный': SendThreats, 'божественный': SendThreats, 'генос': HeroHenos, 'сайтама': HeroSaitama,
+       'гомо-гомо зек': HeroGomoZek, 'counter of users': counter_of_users, 'стальная бита': HeroBita,
+       'мастер в майке': HeroMaster, 'световой флэш': HeroFlash, 'сторожевой пёс': HeroDog,
+       'сверхлитой темноблеск': HeroSverx, 'свинобог': HeroPig, 'технорыцарь': knight,
        'зомбимен': zombie, 'кинг': king, 'бофой': bofoi}
 
 text = {'уровни угроз': 'Ассоциацией Героев было создано разделение монстров по уровням опасности.\n\n'
