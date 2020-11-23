@@ -177,7 +177,7 @@ def for_user_text(message):
 
     elif BotHandlers.users[message.from_user.id] == "idea":
         f = open('ideas.txt', 'a')
-        f.write(str(message.from_user.id) + ' idea:' + str(message.text)+'\n')
+        f.write(str(message.from_user.id) + ' idea:' + str(message.text)+'\n', encoding="utf-8")
         f.close()
         BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, "Спасибо, постараемся в "
