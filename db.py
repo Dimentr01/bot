@@ -1,9 +1,9 @@
 import pymysql
 
-conn = pymysql.connect(host='localhost',
-                       database='onepunchman',
-                       user='dimentrx', #dimentrx
-                       password='aH$2ucutROA1',
+conn = pymysql.connect(host='',
+                       database='',
+                       user='', 
+                       password='',
                        )
 
 
