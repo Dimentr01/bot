@@ -1,16 +1,15 @@
 import pymysql
 
-
 conn = pymysql.connect(host='localhost',
                        database='onepunchman',
-                       user='root', #dimentrx
+                       user='dimentrx', #dimentrx
                        password='aH$2ucutROA1',
                        )
-cursor = conn.cursor()
 
 
 def part_of_search_similar_photo(it_end):
     minn = f"""SELECT MIN(BIT_COUNT(phash ^ '{it_end}')) FROM picturehashes;"""
+    cursor = conn.cursor()
     cursor.execute(minn)
     resultpp = cursor.fetchall()
 
@@ -27,11 +26,14 @@ def part_of_search_similar_photo(it_end):
 
     cursor.execute(sql)
     result = cursor.fetchall()
+    cursor.close()
     return result
 
 
 def count():
     sql = """SELECT COUNT(*) FROM users; """
+    cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
+    cursor.close()
     return result

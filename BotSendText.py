@@ -6,8 +6,8 @@ import keyboards
 import emoji
 import db
 
-# bot = telebot.TeleBot('1215578709:AAExaTAxqks3rgp3HuRfVDRBacCso6F1llI')
-bot = telebot.TeleBot('1405305278:AAGUk4qeocL9FyKWKx39vGSHIqPU4FtygzU')
+bot = telebot.TeleBot('1215578709:AAExaTAxqks3rgp3HuRfVDRBacCso6F1llI')
+# bot = telebot.TeleBot('1405305278:AAGUk4qeocL9FyKWKx39vGSHIqPU4FtygzU')
 req = {}
 text = {}
 
@@ -97,7 +97,8 @@ def for_user_text(message):
         bot.send_message(message.chat.id, 'Выбирай', reply_markup=keyboards.keyboard_phrases)
         BotHandlers.users[message.from_user.id] = "phrases"
     elif message.text.lower() == 'как это работает?' and \
-            BotHandlers.users[message.from_user.id] == "phrases":
+            (BotHandlers.users[message.from_user.id] == "phrase_vvod" or
+             BotHandlers.users[message.from_user.id] == "phrases"):
         bot.send_message(message.chat.id,
                          'Так как это работает?\n\nВы вводите какую-то фразу, которая уже есть в '
                          'списке и вам выдаётся серия, в которой она была.\n\nВводить фразу можно '
@@ -135,55 +136,6 @@ def for_user_text(message):
                          "равных была хороша.\n-Ага. И правда.\n-Лжёшь, у тебя было преимущество. У "
                          "меня не было ни шанса. Я даже боя дать тебе не смог.",
                          reply_markup=keyboards.keyboard_phrases_list)
-    elif BotHandlers.users[message.from_user.id] == "phrase_vvod":
-        BotHandlers.users[message.from_user.id] = "phrases"
-        print("phrase:", message.text)
-        if message.text.lower() == "1)" or message.text.lower() == "блин, я забыл купить бульон из комбу":
-            PersonalCommands.send_video("1 сезон 6 серия", message)
-            bot.send_message(message.chat.id,
-                             'Фраза "блин, я забыл купить бульон из комбу" в 18:50\n(18 минут 50 секунд)',
-                             reply_markup=keyboards.keyboard1)
-        elif message.text.lower() == "2)" or message.text.lower() == "мне на подготовительные надо, можно идти уже?":
-            PersonalCommands.send_video("1 сезон 10 серия", message)
-            bot.send_message(message.chat.id, 'Фраза "Мне на подготовительные '
-                                              'надо, можно идти уже?" в 12:40\n(12 минут 40 секунд)',
-                             reply_markup=keyboards.keyboard1)
-        elif message.text.lower() == "5)" or message.text.lower() == "у меня уже есть фанклуб":
-            PersonalCommands.send_video("2 сезон 2 серия", message)
-            bot.send_message(message.chat.id, 'Фраза '
-                                              '"У меня уже есть фанклуб" в 06:10\n(6 минут 10 секунд)',
-                             reply_markup=keyboards.keyboard1)
-        elif message.text.lower() == "7)" or message.text.lower() == "о, неплохой дроп":
-            PersonalCommands.send_video("2 сезон 2 серия", message)
-            bot.send_message(message.chat.id, 'Фраза '
-                                              '"О, неплохой дроп" в 06:20\n(6 минут 20 секунд)',
-                             reply_markup=keyboards.keyboard1)
-        elif message.text.lower() == "3)" or message.text.lower() == '—ну у тебя окно было открыто.\n—вообще-то мы на ' \
-                                                                     '22 этаже.':
-            PersonalCommands.send_video("2 сезон 1 серия", message)
-            bot.send_message(message.chat.id, 'Этот диалог был в 08:00\n(8-ая минута)',
-                             reply_markup=keyboards.keyboard1)
-        elif message.text.lower() == "4)" or message.text.lower() == 'эээ, реябят. присмотрите за павшими героями. ' \
-                                                                     'нехорошо будет, если помрут. кого мне тогда ' \
-                                                                     'использовать?':
-            PersonalCommands.send_video("1 сезон 9 серия", message)
-            bot.send_message(message.chat.id,
-                             'Фраза "Эээ, реябят. Присмотрите за павшими героями. Нехорошо будет, '
-                             'если помрут. Кого мне тогда использовать?" в 15:08\n(15 минут 8 '
-                             'секунд)',
-                             reply_markup=keyboards.keyboard1)
-        elif message.text.lower() == "6)" or message.text == '-Пророчество сбылось, битва на равных была ' \
-                                                             'хороша.\n-Ага. И правда.\n-Лжёшь, у тебя было ' \
-                                                             'преимущество. У меня не было ни шанса. Я даже боя дать ' \
-                                                             'тебе не смог.':
-            PersonalCommands.send_video("1 сезон 12 серия", message)
-            bot.send_message(message.chat.id, 'Этот диалог был в 11:58\n(11-ая минута 58-ая секунда)',
-                             reply_markup=keyboards.keyboard1)
-        else:
-            bot.send_message(message.chat.id,
-                             'Такой фразы ещё нет, но вы можете добваить её в\nМеню->Другое->"Предложить идею"',
-                             reply_markup=keyboards.keyboard1)
-
     elif BotHandlers.users[message.from_user.id] == "idea":
         f = open('ideas.txt', 'a', encoding="utf-8")
         f.write(str(message.from_user.id) + ' idea:' + str(message.text) + '\n')
@@ -254,16 +206,71 @@ def for_user_text(message):
     elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "chamber":
         BotHandlers.users[message.from_user.id] = "villains"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_villain)
-    elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "phrases":
+    elif message.text.lower() == 'назад' and \
+            (BotHandlers.users[message.from_user.id] == "phrase_vvod" or
+             BotHandlers.users[message.from_user.id] == "phrases"):
         BotHandlers.users[message.from_user.id] = "join"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard1)
     elif message.text.lower() == 'назад' and BotHandlers.users[message.from_user.id] == "phrases_list":
         BotHandlers.users[message.from_user.id] = "phrases"
         bot.send_message(message.chat.id, "Вернулись", reply_markup=keyboards.keyboard_phrases)
 
-    elif message.text.lower() == 'посмотреть список фраз':
+    elif message.text.lower() == 'посмотреть список фраз' and \
+            (BotHandlers.users[message.from_user.id] == "phrase_vvod" or
+             BotHandlers.users[message.from_user.id] == "phrases"):
         BotHandlers.users[message.from_user.id] = "phrases_list"
         bot.send_message(message.chat.id, "Выбирай:", reply_markup=keyboards.keyboard_phrases_list)
+    elif BotHandlers.users[message.from_user.id] == "phrase_vvod":
+        BotHandlers.users[message.from_user.id] = "phrases"
+        f = open('ideas.txt', 'a', encoding="utf-8")
+        f.write(str(message.from_user.id) + ' phrase:' + str(message.text) + '\n')
+        f.close()
+        if message.text.lower() == "1)" or message.text.lower() == "блин, я забыл купить бульон из комбу":
+            PersonalCommands.send_video("1 сезон 6 серия", message)
+            bot.send_message(message.chat.id,
+                             'Фраза "блин, я забыл купить бульон из комбу" в 18:50\n(18 минут 50 секунд)',
+                             reply_markup=keyboards.keyboard1)
+        elif message.text.lower() == "2)" or message.text.lower() == "мне на подготовительные надо, можно идти уже?":
+            PersonalCommands.send_video("1 сезон 10 серия", message)
+            bot.send_message(message.chat.id, 'Фраза "Мне на подготовительные '
+                                              'надо, можно идти уже?" в 12:40\n(12 минут 40 секунд)',
+                             reply_markup=keyboards.keyboard1)
+        elif message.text.lower() == "5)" or message.text.lower() == "у меня уже есть фанклуб":
+            PersonalCommands.send_video("2 сезон 2 серия", message)
+            bot.send_message(message.chat.id, 'Фраза '
+                                              '"У меня уже есть фанклуб" в 06:10\n(6 минут 10 секунд)',
+                             reply_markup=keyboards.keyboard1)
+        elif message.text.lower() == "7)" or message.text.lower() == "о, неплохой дроп":
+            PersonalCommands.send_video("2 сезон 2 серия", message)
+            bot.send_message(message.chat.id, 'Фраза '
+                                              '"О, неплохой дроп" в 06:20\n(6 минут 20 секунд)',
+                             reply_markup=keyboards.keyboard1)
+        elif message.text.lower() == "3)" or message.text.lower() == '—ну у тебя окно было открыто.\n—вообще-то мы на ' \
+                                                                     '22 этаже.':
+            PersonalCommands.send_video("2 сезон 1 серия", message)
+            bot.send_message(message.chat.id, 'Этот диалог был в 08:00\n(8-ая минута)',
+                             reply_markup=keyboards.keyboard1)
+        elif message.text.lower() == "4)" or message.text.lower() == 'эээ, реябят. присмотрите за павшими героями. ' \
+                                                                     'нехорошо будет, если помрут. кого мне тогда ' \
+                                                                     'использовать?':
+            PersonalCommands.send_video("1 сезон 9 серия", message)
+            bot.send_message(message.chat.id,
+                             'Фраза "Эээ, реябят. Присмотрите за павшими героями. Нехорошо будет, '
+                             'если помрут. Кого мне тогда использовать?" в 15:08\n(15 минут 8 '
+                             'секунд)',
+                             reply_markup=keyboards.keyboard1)
+        elif message.text.lower() == "6)" or message.text == '-Пророчество сбылось, битва на равных была ' \
+                                                             'хороша.\n-Ага. И правда.\n-Лжёшь, у тебя было ' \
+                                                             'преимущество. У меня не было ни шанса. Я даже боя дать ' \
+                                                             'тебе не смог.':
+            PersonalCommands.send_video("1 сезон 12 серия", message)
+            bot.send_message(message.chat.id, 'Этот диалог был в 11:58\n(11-ая минута 58-ая секунда)',
+                             reply_markup=keyboards.keyboard1)
+        else:
+            bot.send_message(message.chat.id,
+                             'Такой фразы ещё нет, но вы можете добваить её в\nМеню->Другое->"Предложить идею"',
+                             reply_markup=keyboards.keyboard1)
+
     elif message.text == emoji.emojize('Найти серию по битве :boom:', use_aliases=True):
         logging.info(f'user- {message.from_user.id}, enter- {message.text}')
         bot.send_message(message.chat.id,
