@@ -3,8 +3,6 @@ import keyboards
 import PersonalCommands
 import SearchSeries
 
-bot = telebot.TeleBot('1215578709:AAExaTAxqks3rgp3HuRfVDRBacCso6F1llI')
-# bot = telebot.TeleBot('1405305278:AAGUk4qeocL9FyKWKx39vGSHIqPU4FtygzU')
 users = {}
 
 
