@@ -7,9 +7,6 @@ import BotSendText
 
 while True:
     try:
-        bot = telebot.TeleBot('1215578709:AAExaTAxqks3rgp3HuRfVDRBacCso6F1llI')
-        #bot = telebot.TeleBot('1405305278:AAGUk4qeocL9FyKWKx39vGSHIqPU4FtygzU')
-
         @bot.message_handler(commands=['start'])
         def start_message(message):
             BotHandlers.start(message)
